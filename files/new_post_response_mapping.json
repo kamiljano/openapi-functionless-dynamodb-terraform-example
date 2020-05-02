@@ -1,0 +1,4 @@
+{
+  "id": "$context.requestId",
+  "createdAt": "$context.requestTime"
+}

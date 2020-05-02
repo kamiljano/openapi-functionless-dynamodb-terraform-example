@@ -1,0 +1,17 @@
+{
+  "TableName": "functionless-blog-terraform-example",
+  "Item": {
+    "ID": {
+      "S": "$context.requestId"
+    },
+    "CreatedAt": {
+      "S": "$context.requestTime"
+    },
+    "Content": {
+      "S": $input.json('content')
+    },
+    "Author": {
+      "S": $input.json('author')
+    }
+  }
+}

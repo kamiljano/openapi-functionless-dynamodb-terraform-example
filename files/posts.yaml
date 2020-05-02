@@ -1,0 +1,70 @@
+---
+openapi: "3.0.3"
+info:
+  title: "OpenAPI functionless example"
+  version: "v1.0"
+  description: "An example of functionless computing with AWS"
+servers:
+  - url: https://my-comments.com/v1
+    description: development
+x-amazon-apigateway-request-validators:
+  basic:
+    validateRequestBody: true
+    validateRequestParameters: true
+x-amazon-apigateway-request-validator: basic
+paths:
+  /posts:
+    post:
+      summary: "Create a new Post"
+      tags:
+        - Posts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewPost"
+      responses:
+        '201':
+          description: Post created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:${aws_region}:dynamodb:action/PutItem"
+        credentials: "${dynamo_management_iam_role_arn}"
+        passthroughBehavior: never
+        timeoutInMillis: 5000
+        httpMethod: "POST"
+        type: aws
+        requestTemplates:
+          "application/json": "${new_post_request_mapping}"
+        responses:
+          "2\\d{2}":
+            statusCode: 201
+            responseTemplates:
+              "application/json": "${new_post_response_mapping}"
+
+components:
+  schemas:
+    NewPost:
+      type: object
+      required:
+        - content
+        - author
+      properties:
+        content:
+          type: string
+          description: Content of the post
+        author:
+          type: string
+          description: Name of the author of the post
+    Post:
+      allOf:
+        - $ref: '#/components/schemas/NewPost'
+        - type: object
+          properties:
+            id:
+              type: string
+              description: "The database ID"
