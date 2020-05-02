@@ -1,0 +1,14 @@
+#set( $inputRoot = $input.path('$') )
+{
+"items": [
+  #foreach($item in $inputRoot.Items)
+  {
+    "id": "$item.ID.S",
+    "createdAt": "$item.CreatedAt.S",
+    "content": "$item.Content.S",
+    "author": "$item.Author.S",
+}
+  #if( $foreach.count < $inputRoot.Items.size() ) , #end
+  #end
+]
+}

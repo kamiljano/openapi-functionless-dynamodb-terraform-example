@@ -30,7 +30,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Post"
+                $ref: "#/components/schemas/NewPostResponse"
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:${aws_region}:dynamodb:action/PutItem"
         credentials: "${dynamo_management_iam_role_arn}"
@@ -46,6 +46,37 @@ paths:
             responseTemplates:
               "application/json": "${new_post_response_mapping}"
 
+    get:
+      summary: "Listing of all posts"
+      tags:
+        - Posts
+      responses:
+        '200':
+          description: Post created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:${aws_region}:dynamodb:action/Scan"
+        credentials: "${dynamo_management_iam_role_arn}"
+        passthroughBehavior: never
+        timeoutInMillis: 5000
+        httpMethod: "POST"
+        type: aws
+        requestTemplates:
+          "application/json": "${list_posts_request_mapping}"
+        responses:
+          "2\\d{2}":
+            statusCode: 200
+            responseTemplates:
+              "application/json": "${list_posts_response_mapping}"
+
 components:
   schemas:
     NewPost:
@@ -60,11 +91,16 @@ components:
         author:
           type: string
           description: Name of the author of the post
+    NewPostResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "The database ID of the new post"
+        createdAt:
+          type: string
+          description: "The time when the post was created"
     Post:
       allOf:
         - $ref: '#/components/schemas/NewPost'
-        - type: object
-          properties:
-            id:
-              type: string
-              description: "The database ID"
+        - $ref: '#/components/schemas/NewPostResponse'
