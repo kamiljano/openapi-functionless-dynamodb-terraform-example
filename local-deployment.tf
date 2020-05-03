@@ -5,7 +5,7 @@ provider "aws" {
 }
 
 module "functionless" {
-  source = "./modules"
+  source = "./modules/open-api-gateway"
 
   application_name = var.application_name
   open_api = {
