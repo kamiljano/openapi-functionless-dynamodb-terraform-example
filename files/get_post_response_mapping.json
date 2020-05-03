@@ -1,0 +1,14 @@
+#set( $item = $input.path('$.Item') )
+#if("$!item" != "")
+{
+  "id": "$item.ID.S",
+  "createdAt": "$item.CreatedAt.S",
+  "author": "$item.Author.S",
+  "content": "$item.Content.S"
+}
+#else
+#set($context.responseOverride.status = 404)
+{
+  "message": "The post that has been requested does not exist"
+}
+#end

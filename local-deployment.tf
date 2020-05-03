@@ -11,11 +11,13 @@ module "functionless" {
   open_api = {
     template_file_path = "${path.module}/files/posts.yaml"
     vars = {
-      aws_region = var.aws_region //TODO: do all the replacements inside the module
-      new_post_request_mapping = replace(replace(file("${path.module}/files/new_post_request_mapping.json"), "<table-name>", var.application_name), "\"", "\\\"")
-      new_post_response_mapping = replace(file("${path.module}/files/new_post_response_mapping.json"), "\"", "\\\"")
-      list_posts_request_mapping = replace(replace(file("${path.module}/files/list_posts_request_mapping.json"), "<table-name>", var.application_name), "\"", "\\\"")
+      aws_region                  = var.aws_region //TODO: do all the replacements inside the module
+      new_post_request_mapping    = replace(replace(file("${path.module}/files/new_post_request_mapping.json"), "<table-name>", var.application_name), "\"", "\\\"")
+      new_post_response_mapping   = replace(file("${path.module}/files/new_post_response_mapping.json"), "\"", "\\\"")
+      list_posts_request_mapping  = replace(replace(file("${path.module}/files/list_posts_request_mapping.json"), "<table-name>", var.application_name), "\"", "\\\"")
       list_posts_response_mapping = replace(file("${path.module}/files/list_posts_response_mapping.json"), "\"", "\\\"")
+      get_post_request_mapping    = replace(replace(file("${path.module}/files/get_post_request_mapping.json"), "<table-name>", var.application_name), "\"", "\\\"")
+      get_post_response_mapping   = replace(file("${path.module}/files/get_post_response_mapping.json"), "\"", "\\\"")
     }
   }
 }

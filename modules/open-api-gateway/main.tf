@@ -2,7 +2,7 @@ data "template_file" "template" {
   template = file(var.open_api.template_file_path)
 
   vars = merge(var.open_api.vars, {
-    dynamo_management_iam_role_arn: aws_iam_role.api_gateway_role.arn
+    dynamo_management_iam_role_arn : aws_iam_role.api_gateway_role.arn
   })
 }
 
@@ -19,8 +19,8 @@ resource "aws_api_gateway_deployment" "v1" {
 }
 
 resource "aws_iam_role" "api_gateway_role" {
-  name = "${var.application_name}-api-gateway-role"
-  tags = var.tags
+  name               = "${var.application_name}-api-gateway-role"
+  tags               = var.tags
   assume_role_policy = <<-EOF
   {
     "Version": "2012-10-17",

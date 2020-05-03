@@ -1,7 +1,7 @@
 variable "open_api" {
   type = object({
     template_file_path = string
-    vars = any
+    vars               = any
   })
 }
 
@@ -14,6 +14,6 @@ variable "application_name" {
 variable "tags" {
   type = any
 
-  default = {}
+  default     = {}
   description = "Common tags for all created resources"
 }

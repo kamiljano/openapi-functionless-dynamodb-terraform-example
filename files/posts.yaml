@@ -52,7 +52,7 @@ paths:
         - Posts
       responses:
         '200':
-          description: Post created
+          description: Sucessfully listed the posts
           content:
             application/json:
               schema:
@@ -76,6 +76,43 @@ paths:
             statusCode: 200
             responseTemplates:
               "application/json": "${list_posts_response_mapping}"
+
+  /posts/{id}:
+    get:
+      summary: "Get post by id"
+      tags:
+        - Posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the post to retrieve
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successfully loaded the post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: Post not found
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:${aws_region}:dynamodb:action/GetItem"
+        credentials: "${dynamo_management_iam_role_arn}"
+        passthroughBehavior: never
+        timeoutInMillis: 5000
+        httpMethod: "POST"
+        type: aws
+        requestTemplates:
+          "application/json": "${get_post_request_mapping}"
+        responses:
+          "2\\d{2}":
+            statusCode: 200
+            responseTemplates:
+              "application/json": "${get_post_response_mapping}"
 
 components:
   schemas:
